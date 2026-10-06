@@ -1,27 +1,27 @@
-// Para visualizar errores
+// Ver detalles sobre las librerías importadas aquí en el README
 #include <stdio.h>
-// Hacer exit en caso de falla
 #include <stdlib.h>
-// Función para declarar sockets
 #include <sys/socket.h>
-// Funciones de conversión de direcciones
 #include <arpa/inet.h>
 #include <string.h>
-// para close()
 #include <unistd.h>
-// para strcasecmp
 #include <strings.h>
-
 #include <sys/select.h>
 
 // Tamaño constante de nuestro buffer de recepción: 1024 bytes
 #define BUF_SIZE 1024
+// Número de clientes máximo que soporta el broker
 #define MAX_CLIENTES 50
 
 
-// ===================== ESTRUCTURAS ============================
+// ======================== ESTRUCTURAS ============================
 
-// =============== TIPOS DE ROL PARA UN CLIENTE =================
+/**
+ * Esta enumeración es usada para darle un rol a los clientes
+ * Por clientes nos referimos a los suscriptores y publicadores que se
+ * comunicarán con el buffer para recibir o publicar noticias deportivas
+ * sobre los partidos
+ */
 
 typedef enum
 {
@@ -30,11 +30,11 @@ typedef enum
     ROL_SUSCRIPTOR
 } Rol;
 
-// =============== ESTRUCTURA PARA REPRESENTAR UN CLIENTE =================
+// Esta estructura representa a un cliente
 
 typedef struct
 {
-    int fd;
+    int fd; //file descriptor/Socket que usa el cliente
     Rol rol;
     char equipo[64]; // solo tiene sentido si el rol es ROL_SUSCRIPTOR
 } Cliente;
@@ -48,6 +48,7 @@ void quitar_cliente(Cliente clientes[], int *num_clientes, int indice)
     close(clientes[indice].fd);
 
     // Copiamos TODA la estructura del último cliente, no solo su fd
+    // Al sacar a un cliente, damos paso a los demás
     clientes[indice] = clientes[*num_clientes - 1];
 
     (*num_clientes)--;
@@ -112,7 +113,7 @@ int main()
 
     addr_broker.sin_family = AF_INET;
     addr_broker.sin_addr.s_addr = INADDR_ANY;
-    addr_broker.sin_port = htons(9000);
+    addr_broker.sin_port = htons(9000); //Usaremos el puerto 9000 para recibir conexiones
 
     int result_bind = bind(fd_broker_skt, (struct sockaddr *)&addr_broker, sizeof(addr_broker));
 
