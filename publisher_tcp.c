@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
 
     // =============== BUCLE DE ENVÍO DE NOTICIAS =================
 
-    printf("Formato de entrada: EQUIPO:mensaje   (ej. Millonarios:Gol al minuto 30)\n");
+    printf("Formato de entrada: PARTIDO:mensaje   (ej. Arsenal-Liverpool:Gol al minuto 30)\n");
     printf("Escriba 'salir' para terminar.\n\n");
 
     char linea[BUF_SIZE];
@@ -139,14 +139,14 @@ int main(int argc, char *argv[])
         }
 
         // strchr(): busca el caracter ':' dentro de "linea"; valida que
-        // el formato ingresado sea EQUIPO:mensaje antes de enviarlo
+        // el formato ingresado sea PARTIDO:mensaje antes de enviarlo
         if (strchr(linea, ':') == NULL)
         {
-            printf("Formato invalido, use EQUIPO:mensaje\n");
+            printf("Formato invalido, use PARTIDO:mensaje\n");
             continue;
         }
 
-        // send(): reenvia la linea completa (equipo:mensaje\n) al broker
+        // send(): reenvia la linea completa (partido:mensaje\n) al broker
         int bytes = send(fd_publicador_skt, linea, strlen(linea), 0);
 
         if (bytes < 0)

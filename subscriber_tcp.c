@@ -9,11 +9,11 @@
 
 int main(int argc, char *argv[])
 {
-    // Validamos que nos hayan pasado IP, puerto del broker y equipo al que se suscribe como argumentos
+    // Validamos que nos hayan pasado IP, puerto del broker y partido al que se suscribe como argumentos
     if (argc != 4)
     {
-        fprintf(stderr, "Uso: %s <ip_broker> <puerto> <equipo>\n", argv[0]);
-        fprintf(stderr, "Use 'ALL' si quiere recibir noticias sobre todos los equipos\n");
+        fprintf(stderr, "Uso: %s <ip_broker> <puerto> <partido>\n", argv[0]);
+        fprintf(stderr, "Use 'ALL' si quiere recibir noticias sobre todos los partidos\n");
         exit(1);
     }
 
@@ -86,10 +86,10 @@ int main(int argc, char *argv[])
 
     printf("Conectado al broker en %s:%s\n", argv[1], argv[2]);
 
-    // =============== IDENTIFICARSE COMO SUSCRIPTOR DE UN EQUIPO =================
+    // =============== IDENTIFICARSE COMO SUSCRIPTOR DE UN PARTIDO =================
 
     // snprintf(): arma el mensaje de registro combinando el texto fijo
-    // "SUB " con el equipo recibido por argumento (argv[3]), respetando
+    // "SUB " con el partido recibido por argumento (argv[3]), respetando
     // el tamaño maximo del buffer para no desbordarlo
     char mensaje_registro[BUF_SIZE];
     snprintf(mensaje_registro, sizeof(mensaje_registro), "SUB %s\n", argv[3]);
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
      * send(): envia bytes por un socket ya conectado.
      * 
      * - fd_suscriptor_skt: el socket conectado al broker
-     * - mensaje_registro: los datos a enviar ("SUB equipo\n")
+     * - mensaje_registro: los datos a enviar ("SUB partido\n")
      * - strlen(mensaje_registro): cuantos bytes enviar
      * - 0: flags, sin opciones especiales
      * 
@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    printf("Suscrito al equipo '%s'\n", argv[3]);
+    printf("Suscrito al partido '%s'\n", argv[3]);
 
     // =============== ESPERAR NOTICIAS =================
 

@@ -36,7 +36,7 @@ typedef struct
 {
     int fd; //file descriptor/Socket que usa el cliente
     Rol rol;
-    char equipo[64]; // solo tiene sentido si el rol es ROL_SUSCRIPTOR
+    char partido[64]; // solo tiene sentido si el rol es ROL_SUSCRIPTOR
 } Cliente;
 
 
@@ -65,11 +65,11 @@ void quitar_salto_de_linea(char *s)
     }
 }
 
-// Envía la noticia a todos los suscriptores del equipo indicado (o "ALL")
-void difundir_mensaje(Cliente clientes[], int num_clientes, const char *equipo, const char *mensaje)
+// Envía la noticia a todos los suscriptores del partido indicado (o "ALL")
+void difundir_mensaje(Cliente clientes[], int num_clientes, const char *partido, const char *mensaje)
 {
     char linea[BUF_SIZE];
-    snprintf(linea, sizeof(linea), "%s: %s\n", equipo, mensaje);
+    snprintf(linea, sizeof(linea), "%s: %s\n", partido, mensaje);
 
     for (int i = 0; i < num_clientes; i++)
     {
@@ -78,7 +78,7 @@ void difundir_mensaje(Cliente clientes[], int num_clientes, const char *equipo, 
             continue;
         }
 
-        if (strcmp(clientes[i].equipo, equipo) == 0 || strcmp(clientes[i].equipo, "ALL") == 0)
+        if (strcasecmp(clientes[i].partido, partido) == 0 || strcasecmp(clientes[i].partido, "ALL") == 0)
         {
             send(clientes[i].fd, linea, strlen(linea), 0);
         }
@@ -205,8 +205,8 @@ int main()
             {
                 clientes[num_clientes].fd = fd_nuevo_cliente;
                 clientes[num_clientes].rol = ROL_DESCONOCIDO;
-                // Para evitar que haya campos con datos basura que generen bugs en el campo de equipo
-                memset(clientes[num_clientes].equipo, 0, sizeof(clientes[num_clientes].equipo));
+                // Para evitar que haya campos con datos basura que generen bugs en el campo de partido
+                memset(clientes[num_clientes].partido, 0, sizeof(clientes[num_clientes].partido));
                 num_clientes++;
 
                 printf("Cliente conectado, fd = %d\n", fd_nuevo_cliente);
@@ -250,10 +250,10 @@ int main()
                     if (strncmp(buffer, "SUB ", 4) == 0)
                     {
                         clientes[i].rol = ROL_SUSCRIPTOR;
-                        strncpy(clientes[i].equipo, buffer + 4, sizeof(clientes[i].equipo) - 1);
-                        clientes[i].equipo[sizeof(clientes[i].equipo) - 1] = '\0';
+                        strncpy(clientes[i].partido, buffer + 4, sizeof(clientes[i].partido) - 1);
+                        clientes[i].partido[sizeof(clientes[i].partido) - 1] = '\0';
 
-                        printf("Nuevo suscriptor (fd = %d) al equipo '%s'\n", clientes[i].fd, clientes[i].equipo);
+                        printf("Nuevo suscriptor (fd = %d) al partido '%s'\n", clientes[i].fd, clientes[i].partido);
                     }
                     // Los publicadores deben empezar anunciándose con PUB (nada más)
                     else if (strcmp(buffer, "PUB") == 0)
@@ -281,7 +281,7 @@ int main()
                     else
                     {
                         *separador = '\0';
-                        char *equipo = buffer;
+                        char *partido = buffer;
                         char *mensaje = separador + 1;
 
                         while (*mensaje == ' ')
@@ -289,8 +289,8 @@ int main()
                             mensaje++;
                         }
 
-                        printf("Publicando '%s' -> equipo '%s' (enviado por publicador fd=%d)\n", mensaje, equipo, clientes[i].fd);
-                        difundir_mensaje(clientes, num_clientes, equipo, mensaje);
+                        printf("Publicando '%s' -> partido '%s' (enviado por publicador fd=%d)\n", mensaje, partido, clientes[i].fd);
+                        difundir_mensaje(clientes, num_clientes, partido, mensaje);
                     }
                 }
             }
