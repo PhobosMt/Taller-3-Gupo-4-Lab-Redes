@@ -27,7 +27,11 @@ Librerías utilizadas:
 
 - `#include <sys/select.h>` **(POSIX, no estándar de C)**: Esta librería nos permite el manejo de múltiples sockets simultáneamente (multiplexado de E/S), necesario para que el broker atienda a los múltiples publicadores y suscriptores que se conecten, sin bloquearse esperando a uno solo. Trae la función `select()`, el tipo `fd_set`, y las macros `FD_ZERO()`, `FD_SET()`, `FD_ISSET()`.
 
-## **publicador_tcp.c**
+**¿Cómo correr el programa?**
+1. Compilar el archivo `gcc -Wall -Wextra -g -o brokertcp broker_tcp.c`
+2. Correr usando `.\brokertcp`
+
+## **publicador_tcp.c** 
 
 Librerías utilizadas:
 
@@ -41,6 +45,10 @@ Librerías utilizadas:
 
 - `#include <arpa/inet.h>` **(POSIX, no estándar de C)**: La usamos para la estructura `struct sockaddr_in`, la función `inet_pton()` (convertir la IP de texto a formato binario de red) y `htons()` (convertir el puerto a formato de red).
 
+**¿Cómo correr el programa?**
+1. Compilar el archivo `gcc -Wall -Wextra -g -o pubtcp publisher_tcp.c`
+2. Correr usando `.\pubtcp <ip_broker> 9000` Donde ip_broker corresponde a la dirección IP de la máquina donde ejecute el broker
+3. Una vez ejecutado el programa seguir la estructura **TOPICO:***mensaje* para que los mensajes lleguen correctamente a los suscriptores
 
 ## **suscriptor_tcp.c**
 
@@ -55,3 +63,8 @@ Librerías utilizadas:
 - `#include <sys/socket.h>` **(POSIX, no estándar de C)**: La usamos para `socket()` (crear el socket), `send()` (enviar el mensaje de suscripción) y `recv()` (recibir las noticias que el broker reenvía).
 
 - `#include <arpa/inet.h>` **(POSIX, no estándar de C)**: La usamos para `struct sockaddr_in`, `inet_pton()` y `htons()`, igual que en el publicador.
+
+**¿Cómo correr el programa?**
+1. Compilar el archivo `gcc -Wall -Wextra -g -o subtcp subscriber_tcp.c`
+2. Correr usando `.\subtcp <ip_broker> 9000 <partido>` Al igual que con el publicador se debe ingresar la IP del broker, más el tópico al que se quiere suscribir (Nota:El programa también recibe ALL como tópico para recibir noticias de todos los partidos)
+3. Una vez ejecutado el programa esperar a recibir mensajes del broker (Nota: Importante que desde el publicador el tópico se escriba correctamente o no van a recibirse los mensajes, no pueden haber errores)
