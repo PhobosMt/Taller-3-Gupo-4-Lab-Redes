@@ -68,3 +68,37 @@ Librerías utilizadas:
 1. Compilar el archivo `gcc -Wall -Wextra -g -o subtcp subscriber_tcp.c`
 2. Correr usando `.\subtcp <ip_broker> 9000 <partido>` Al igual que con el publicador se debe ingresar la IP del broker, más el tópico al que se quiere suscribir (Nota:El programa también recibe ALL como tópico para recibir noticias de todos los partidos)
 3. Una vez ejecutado el programa esperar a recibir mensajes del broker (Nota: Importante que desde el publicador el tópico se escriba correctamente o no van a recibirse los mensajes, no pueden haber errores)
+
+**UDP:**
+
+**¿Cómo correr el programa?**
+
+1. Compilar los tres archivos, del broker, subscriber y publisher, puede copiar los siguientes comandos para hacerlo:
+
+**Comando broker:** "gcc -o broker_udp broker_udp.c"
+**Comando publisher:** "gcc -o publisher_udp publisher_udp.c"
+**comando subscriber:** "gcc -o subscriber_udp subscriber_udp.c"
+
+2. Luego de eso, hace falta abrir una terminal por cada uno, una para el broker, y una para cada uno de los subscribers y publishers que se quieran utilizar. 
+
+**Nota:** el puerto por defecto es el 9000, por lo que será el que se use en los ejemplos de cómo correr el programa. 
+
+**Comando broker:** "./broker_udp 9000"
+
+**Comando subscriber:** "./subscriber_udp 127.0.0.1 9000 ALL"
+
+Tener en cuenta dos cosas, primero que se usa 127.0.0.1 porque es el localhost, y segundo que **ALL** sirve para recibir noticias de todos los partidos activos en ese momento, en caso de querer recibir noticias de un partido en particular se hace lo siguiente:
+
+**Comando subscriber:** "./subscriber_udp 127.0.0.1 9000 Millonarios-SantaFe"
+
+El nombre del partido es el nombre del primer equipo, y un guión medio, seguido del nombre del segundo equipo. No hace falta ejecutar el código del publisher antes, si se ejecuta antes el subscriber, se queda esperando a las noticias. 
+
+**Comando publisher:** "./publisher_udp 127.0.0.1 9000"
+
+3. En el publisher se mandan las noticias de los partidos con un comando Llave-Valor, el cual tiene la siguiente estructura.
+
+**Mensaje publisher:** "Millonarios-SantaFe: Inicio del partido en el Campin"
+
+La estructura es NombrePartido:NoticiaPartido. Recordar que el nombre del partido es Equipo1-Equipo2, por lo que el mensaje debería ser Equipo1-Equipo2:NoticiaPartido. Si el subscriber está suscrito a un partido en específico, solo recibirá los mensajes del publisher que tengan esos dos equipos en la llave del mensaje.
+
+**Nota:** para dejar de ejecutar el publisher, escriba el mensaje "salir" tal cual, con todo en minúsculas y sin espacios. 
