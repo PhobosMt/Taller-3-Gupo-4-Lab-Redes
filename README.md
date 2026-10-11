@@ -69,7 +69,56 @@ Librerías utilizadas:
 2. Correr usando `.\subtcp <ip_broker> 9000 <partido>` Al igual que con el publicador se debe ingresar la IP del broker, más el tópico al que se quiere suscribir (Nota:El programa también recibe ALL como tópico para recibir noticias de todos los partidos)
 3. Una vez ejecutado el programa esperar a recibir mensajes del broker (Nota: Importante que desde el publicador el tópico se escriba correctamente o no van a recibirse los mensajes, no pueden haber errores)
 
-**UDP:**
+## **UDP:**
+
+**Librerías utilizadas:**
+
+## **broker_udp.c**
+
+#`include <stdio.h>` **(estándar de C)**: Esta librería importa las funciones de entrada y salida estándar. Se utiliza para imprimir mensajes por consola (mensajes informativos, notificaciones de eventos o avisos de error) y para la lectura/formateo de datos. (De este módulo se usan funciones como printf(), fprintf(), perror(), fgets() y snprintf()).
+
+#`include <stdlib.h>` **(estándar de C):** Librería de utilidades generales del sistema. Se utiliza para la gestión de terminación del programa y conversión de tipos de datos. (De este módulo se usan funciones como exit() para finalizar la ejecución ante fallas críticas y atoi() para convertir cadenas de texto a enteros, por ejemplo al procesar el puerto pasado por línea de comandos).
+
+#`include <string.h>` **(estándar de C):** Librería para la manipulación de cadenas de caracteres y bloques de memoria. (Se utiliza para memset() para limpiar o inicializar estructuras en cero, strlen() para medir la longitud de los mensajes enviadas o recibidos, strcmp()/strncmp() para comparar comandos como "PUB", "SUB" o "salir", strchr() para buscar delimitadores como el carácter : y strncpy() para realizar copias seguras de texto evitando desbordamientos de buffer).
+
+#`include <unistd.h>` **(POSIX, no estándar de C):** Proporciona acceso a la API de llamadas al sistema del estándar POSIX. (De esta librería se utiliza principalmente la función close() para cerrar de manera limpia y adecuada los sockets y descriptores de archivo abiertos).
+
+#`include <sys/socket.h>` **(POSIX, no estándar de C):** Cabecera principal para el manejo de sockets en sistemas UNIX/Linux. Define las estructuras de datos y las llamadas a sistema necesarias para la comunicación por red. (Se utiliza para la creación de sockets con socket(), el envío de datos con send() o sendto(), la recepción con recv() o recvfrom(), así como la vinculación de puertos mediante bind()).
+
+#`include <arpa/inet.h>` **(POSIX, no estándar de C):** Librería encargada de las operaciones con direcciones de Internet y conversión de formatos entre la representación de la máquina (host) y la red (network byte order). (De este módulo se utilizan funciones como htons() para convertir el número de puerto a formato de red, inet_pton() para convertir direcciones IP en formato texto a su representación binaria y la estructura struct sockaddr_in).
+
+#`include <netinet/in.h>` **(POSIX, no estándar de C):** Define las constantes y estructuras fundamentales para la familia de protocolos de Internet (IPv4 / IPv6). Complementa a `<arpa/inet.h>` definiendo constantes como INADDR_ANY (para vincular el socket a todas las interfaces locales de red) y tipos de datos como in_port_t, in_addr_t y la estructura struct sockaddr_in.
+
+#`include <strings.h>` **(POSIX, no estándar de C):** Cabecera histórica de POSIX `(distinta de <string.h>).` Proporciona funciones para la comparación de cadenas insensibles a mayúsculas y minúsculas. (Se utiliza para strcasecmp(), permitiendo que el programa reconozca nombres de equipos o tópicos de suscripción de manera equivalente independientemente de si el usuario los escribe en mayúsculas o minúsculas).
+
+## **publisher_udp.c**
+
+#`include <stdio.h>` **(estándar de C):** Esta librería importa las funciones de entrada y salida estándar. Se utiliza para imprimir mensajes por consola (mensajes informativos, notificaciones de eventos o avisos de error) y para la lectura/formateo de datos. (De este módulo se usan funciones como printf(), fprintf(), perror(), fgets() y snprintf()).
+
+#`include <stdlib.h>` **(estándar de C):** Librería de utilidades generales del sistema. Se utiliza para la gestión de terminación del programa y conversión de tipos de datos. (De este módulo se usan funciones como exit() para finalizar la ejecución ante fallas críticas y atoi() para convertir cadenas de texto a enteros, por ejemplo al procesar el puerto pasado por línea de comandos).
+
+#`include <string.h>` **(estándar de C):** Librería para la manipulación de cadenas de caracteres y bloques de memoria. (Se utiliza para memset() para limpiar o inicializar estructuras en cero, strlen() para medir la longitud de los mensajes enviadas o recibidos, strcmp()/strncmp() para comparar comandos como "PUB", "SUB" o "salir", strchr() para buscar delimitadores como el carácter : y strncpy() para realizar copias seguras de texto evitando desbordamientos de buffer).
+
+#`include <unistd.h>` **(POSIX, no estándar de C):** Proporciona acceso a la API de llamadas al sistema del estándar POSIX. (De esta librería se utiliza principalmente la función close() para cerrar de manera limpia y adecuada los sockets y descriptores de archivo abiertos).
+
+#`include <sys/socket.h>` **(POSIX, no estándar de C):** Cabecera principal para el manejo de sockets en sistemas UNIX/Linux. Define las estructuras de datos y las llamadas a sistema necesarias para la comunicación por red. (Se utiliza para la creación de sockets con socket(), el envío de datos con send() o sendto(), la recepción con recv() o recvfrom(), así como la vinculación de puertos mediante bind()).
+
+#`include <arpa/inet.h>` **(POSIX, no estándar de C):** Librería encargada de las operaciones con direcciones de Internet y conversión de formatos entre la representación de la máquina (host) y la red (network byte order). (De este módulo se utilizan funciones como htons() para convertir el número de puerto a formato de red, inet_pton() para convertir direcciones IP en formato texto a su representación binaria y la estructura struct sockaddr_in).
+
+#`include <netinet/in.h>` **(POSIX, no estándar de C):** Define las constantes y estructuras fundamentales para la familia de protocolos de Internet (IPv4 / IPv6). Complementa a `<arpa/inet.h>` definiendo constantes como INADDR_ANY (para vincular el socket a todas las interfaces locales de red) y tipos de datos como in_port_t, in_addr_t y la estructura struct sockaddr_in.
+
+## **subscriber_udp.c**
+
+#`include <stdio.h>` **(estándar de C):** Esta librería importa las funciones de entrada y salida estándar. Se utiliza para imprimir mensajes por consola (mensajes informativos, notificaciones de eventos o avisos de error) y para la lectura/formateo de datos. (De este módulo se usan funciones como printf(), fprintf(), perror(), fgets() y snprintf()).
+
+#`include <stdlib.h>` **(estándar de C):** Librería de utilidades generales del sistema. Se utiliza para la gestión de terminación del programa y conversión de tipos de datos. (De este módulo se usan funciones como exit() para finalizar la ejecución ante fallas críticas y atoi() para convertir cadenas de texto a enteros, por ejemplo al procesar el puerto pasado por línea de comandos).
+
+#`include <string.h>` **(estándar de C):** Librería para la manipulación de cadenas de caracteres y bloques de memoria. (Se utiliza para memset() para limpiar o inicializar estructuras en cero, strlen() para medir la longitud de los mensajes enviadas o recibidos, strcmp()/strncmp() para comparar comandos como "PUB", "SUB" o "salir", strchr() para buscar delimitadores como el carácter : y strncpy() para realizar copias seguras de texto evitando desbordamientos de buffer).
+
+#`include <sys/socket.h>` **(POSIX, no estándar de C):** Cabecera principal para el manejo de sockets en sistemas UNIX/Linux. Define las estructuras de datos y las llamadas a sistema necesarias para la comunicación por red. (Se utiliza para la creación de sockets con socket(), el envío de datos con send() o sendto(), la recepción con recv() o recvfrom(), así como la vinculación de puertos mediante bind()).
+
+#`include <arpa/inet.h>` **(POSIX, no estándar de C):** Librería encargada de las operaciones con direcciones de Internet y conversión de formatos entre la representación de la máquina (host) y la red (network byte order). (De este módulo se utilizan funciones como htons() para convertir el número de puerto a formato de red, inet_pton() para convertir direcciones IP en formato texto a su representación binaria y la estructura struct sockaddr_in).
+
 
 **¿Cómo correr el programa?**
 
